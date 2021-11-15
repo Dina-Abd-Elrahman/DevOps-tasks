@@ -1,0 +1,77 @@
+---
+- name: Copy SSH key to remote servers
+  hosts: all
+  vars:
+    users:
+      - cloud
+      - root
+
+  tasks:
+    - name: copy SSH key to remote servers
+      authorized_key:
+        user: "{{ item }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}" 
+      with_items:
+        - "{{ users }}"
+
+    - name: Ensure No login with password
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication'
+        line: 'PasswordAuthentication no'
+      notify:
+        - restart sshd
+
+  handlers:
+    - name: restart sshd
+      systemd:
+        name: sshd
+        state: restarted
+        daemon_reload: yes
+
+- name: Allow SSH, HTTP and 8080
+  hosts: webserver
+  become: true
+  
+  tasks:
+  - name: Save current iptables
+    shell: iptables-save > ~/iptables_$(date +"%d%m%y-%H%M%S")
+
+  - name: flust all iptables filter rules
+    iptables:
+      chain: "{{ item }}"
+      flush: yes
+    with_items:
+      - INPUT
+      - FORWARD
+      - OUTPUT
+
+  - name: Allow related and established connections
+    iptables:
+      chain: INPUT
+      ctstate: ESTABLISHED,RELATED
+      jump: ACCEPT
+    become: yes
+
+  - name: Allow SSH connection
+    iptables:
+      chain: INPUT
+      protocol: tcp
+      destination_port: "{{ item }}"
+      ctstate: NEW
+      jump: ACCEPT
+    with_items:
+      - 22
+      - 80
+  - name: test allow
+    iptables:
+      chain: INPUT
+      src_range: 10.1.23.1-10.1.23.255
+      destination_port: 8080
+      protocol: tcp
+      jump: ACCEPT
+  - name: Block specific IP
+    iptables:
+      chain: INPUT
+      jump: DROP
