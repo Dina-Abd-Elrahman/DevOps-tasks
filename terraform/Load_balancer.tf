@@ -7,6 +7,7 @@
 # Create the VPC
  resource "aws_vpc" "Main" {            
    cidr_block       = "10.0.0.0/24"          # Defining the CIDR block  
+   enable_dns_hostnames = true
    instance_tenancy = "default"             # make it a default vpc
  }
  
