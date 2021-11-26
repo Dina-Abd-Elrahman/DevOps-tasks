@@ -1,0 +1,11 @@
+--- 
+- hosts: all 
+  become: yes
+
+  tasks:
+  - name: "Install packages"
+    yum: "name={{ item }} state=present"
+    with_items:
+      - docker 
+      - docker.io
+      - docker-compose

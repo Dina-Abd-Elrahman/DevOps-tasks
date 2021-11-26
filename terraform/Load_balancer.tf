@@ -19,7 +19,8 @@
 # Create a Public Subnets.
  resource "aws_subnet" "publicsubnets" {    
    vpc_id =  aws_vpc.Main.id
-   cidr_block = "10.0.0.128/26"        
+   cidr_block = "10.0.0.128/26"  
+   map_public_ip_on_launch = "true"      
  }
 
 # Create a Private Subnet                   
@@ -31,7 +32,7 @@
 # Route table for Public Subnet's
  resource "aws_route_table" "PublicRT" {    
     vpc_id =  aws_vpc.Main.id
-         route {
+        route {
     cidr_block = "0.0.0.0/0"               # Traffic from Public Subnet reaches Internet via Internet Gateway
     gateway_id = aws_internet_gateway.IGW.id
      }
