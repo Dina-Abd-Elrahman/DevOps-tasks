@@ -3,7 +3,7 @@
 ##################################################################################
 
  provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
  }
 
 ##################################################################################
@@ -21,20 +21,25 @@ data "aws_ssm_parameter" "ami" {
 # NETWORKING #
 
  resource "aws_vpc" "vpc" {            
-   cidr_block       = "10.0.0.0/16"          # Defining the CIDR block  
-   instance_tenancy = "default"             # make it a default vpc
+   cidr_block           = var.vpc_cidr_block          # Defining the CIDR block  
+   enable_dns_hostnames = var.enable_dns_hostnames
+   # instance_tenancy     = "default"             # make it a default vpc
+   tags = local.common_tags
  }
  
 # Create Internet Gateway and attach it to VPC
  resource "aws_internet_gateway" "igw" {    
-    vpc_id =  aws_vpc.vpc.id               
+    vpc_id =  aws_vpc.vpc.id    
+    tags = local.common_tags           
  }
  
 # Create a Public Subnets.
  resource "aws_subnet" "subnet1" {    
    vpc_id =  aws_vpc.vpc.id
-   cidr_block = "10.0.0.0/24"  
-   map_public_ip_on_launch = "true"      
+   cidr_block = var.vpc_subnet1_cidr_block
+   map_public_ip_on_launch = var.map_public_ip_on_launch  
+
+   tags = local.common_tags   
  }
 
 # ROUTING #
@@ -47,6 +52,8 @@ data "aws_ssm_parameter" "ami" {
     cidr_block = "0.0.0.0/0"               # Traffic from Public Subnet reaches Internet via Internet Gateway
     gateway_id = aws_internet_gateway.igw.id
      }
+
+     tags = local.common_tags
  }
 
 
@@ -80,12 +87,14 @@ resource "aws_security_group" "nginx-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  tags = local.common_tags
+
 }
 
 # INSTANCES #
 resource "aws_instance" "nginx1" {
   ami                    = nonsensitive(data.aws_ssm_parameter.ami.value)
-  instance_type          = "t2.micro"
+  instance_type          = var.instance_type
   subnet_id              = aws_subnet.subnet1.id
   vpc_security_group_ids = [aws_security_group.nginx-sg.id]
 
@@ -107,4 +116,6 @@ echo '<html>
 </body>
 </html>' | sudo tee /usr/share/nginx/html/index.html
 EOF
+
+tags = local.common_tags
 }
