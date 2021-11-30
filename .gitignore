@@ -1,8 +1,0 @@
-### VS Code ###
-.vscode/
-
-### Terraform ###
-.terraform/
-.terraform.*
-terraform.tfstate
-terraform.tfstate.backup
