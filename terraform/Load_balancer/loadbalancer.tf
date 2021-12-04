@@ -1,3 +1,6 @@
+# aws_elb_service_account #
+
+
 # aws_lb #
 resource "aws_lb" "nginx" {
   name               = "globo-web-alb"
@@ -7,6 +10,12 @@ resource "aws_lb" "nginx" {
   subnets            = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]
 
   enable_deletion_protection = false
+
+  access_logs {
+    bucket  = aws_s3_bucket.web_bucket.bucket
+    prefix  = "alb_logs"
+    enabled = true 
+  }
 
   tags = local.common_tags
 }
