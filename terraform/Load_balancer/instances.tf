@@ -18,7 +18,7 @@ sudo cp /home/ec2-user/index.html /usr/share/nginx/html/index.html
 sudo cp /home/ec2-user/Globo_logo_Vert.png /usr/share/nginx/html/Globo_logo_Vert.png
 EOF
 
-tags = local.common_tags
+  tags = local.common_tags
 }
 
 resource "aws_instance" "nginx2" {
@@ -40,5 +40,5 @@ sudo cp /home/ec2-user/index.html /usr/share/nginx/html/index.html
 sudo cp /home/ec2-user/Globo_logo_Vert.png /usr/share/nginx/html/Globo_logo_Vert.png
 EOF
 
-tags = local.common_tags
+  tags = local.common_tags
 }

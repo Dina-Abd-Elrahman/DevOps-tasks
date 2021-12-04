@@ -24,7 +24,7 @@ variable "vpc_subnets_cidr_block" {
 }
 
 variable "map_public_ip_on_launch" {
-  type        = bool 
+  type        = bool
   description = "map a public ip address for subnet instances"
   default     = true
 }
@@ -38,7 +38,7 @@ variable "instance_type" {
 variable "company" {
   type        = string
   description = "company name for resource tagging"
-  default     =  "smart_life"
+  default     = "smart_life"
 }
 
 variable "project" {

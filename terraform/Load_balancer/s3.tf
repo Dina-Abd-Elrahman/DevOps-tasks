@@ -4,7 +4,7 @@ resource "aws_s3_bucket" "web_bucket" {
   bucket        = local.s3_bucket_name
   acl           = "private"
   force_destroy = true
-  policy = <<POLICY
+  policy        = <<POLICY
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -52,7 +52,7 @@ resource "aws_s3_bucket_object" "website" {
   key    = "/website/index.html"
   source = "./website/index.html"
 
-  tags   = local.common_tags
+  tags = local.common_tags
 }
 
 resource "aws_s3_bucket_object" "graphic" {
@@ -60,7 +60,7 @@ resource "aws_s3_bucket_object" "graphic" {
   key    = "/website/Globo_logo_Vert.png"
   source = "./website/Globo_logo_Vert.png"
 
-  tags   = local.common_tags
+  tags = local.common_tags
 }
 
 # aws_iam_role #
@@ -86,12 +86,12 @@ resource "aws_iam_role" "allow_nginx_s3" {
 
   tags = local.common_tags
 }
- 
+
 # aws_iam_role_policy #
 
 resource "aws_iam_role_policy" "allow_s3_all" {
   name = "allow_s3_all"
-  role = aws_iam_role.allow_nginx_s3.name 
+  role = aws_iam_role.allow_nginx_s3.name
 
   policy = <<EOF
 {
