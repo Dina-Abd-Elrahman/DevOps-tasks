@@ -1,5 +1,14 @@
 # Networking - VPC
 
+Appreviations and Terms : 
+	
+- CIDR : classless inter-domain routing
+- IGW  : internet gateway 
+- VGW  : virtual gateway
+- VPN  : virtual private network 
+- EIP  : elastic ip address
+- ENI  : elastic network interface 
+
 ## Default VPC
 
 - All new accounts have a default VPC (one in every region)
@@ -244,3 +253,8 @@
 - ClassicLink: connect EC2-Classic instances to VPCs
 - VPN CloudHub: hub-and-spoke VPN model to connect sites
 - Transit Gateway: transitive peering connection for VPC, VPN and DX
+
+*** if the Corporate DataCenter needs to access an S3 Securelly in your VPC : we need 
+1- VPN to VGW. 
+2- Reverse proxy server to receive requests.  
+3- Gatway endpoint defined in the route table of reverse proxy server.
