@@ -254,7 +254,8 @@ Appreviations and Terms :
 - VPN CloudHub: hub-and-spoke VPN model to connect sites
 - Transit Gateway: transitive peering connection for VPC, VPN and DX
 
-*** if the Corporate DataCenter needs to access an S3 Securelly in your VPC : we need 
+** if the Corporate DataCenter needs to access an S3 Securelly in your VPC: **
+we need 
 1- VPN to VGW. 
 2- Reverse proxy server to receive requests.  
 3- Gatway endpoint defined in the route table of reverse proxy server.
